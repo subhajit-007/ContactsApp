@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Button,
   FlatList,
@@ -12,17 +12,36 @@ import {useDispatch, useSelector} from 'react-redux';
 import {REMOVE_CONTACT, fetchContacts} from '../store/contactsSlice';
 import {Swipeable} from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
-import {List, FAB, Icon} from 'react-native-paper';
+import {List, FAB, Icon, Appbar} from 'react-native-paper';
 
 const ContactsList = ({navigation}) => {
   const dispatch = useDispatch();
   const contacts = useSelector(state => state.contacts.contactList);
+
+  // Sort contacts alphabetically by name
+  const sortedContacts = contacts
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const [showFav, setShowFav] = useState(false);
+  const [favList, setFavList] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchContacts());
     }, [dispatch]),
   );
+
+  useEffect(() => {
+    if (showFav) {
+      console.log(
+        'fav list ==> ',
+        contacts.filter(contact => contact.fav),
+      );
+      let data = contacts.filter(contact => contact.fav);
+      setFavList(data.sort((a, b) => a.name.localeCompare(b.name)));
+    }
+  }, [showFav]);
 
   const handleRemoveContact = id => {
     dispatch(REMOVE_CONTACT(id));
@@ -99,20 +118,46 @@ const ContactsList = ({navigation}) => {
     );
   };
 
+  const onFavToggle = () => {
+    setShowFav(!showFav);
+  };
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={contacts}
-        renderItem={renderContactListItem}
-        ListEmptyComponent={renderNoDataFound}
-        keyExtractor={item => item.id}
-      />
-      <FAB
-        icon={require('../assets/icons/add-user.png')}
-        style={styles.newContactFab}
-        onPress={() => navigation.navigate('NewContact')}
-      />
-    </View>
+    <>
+      <Appbar.Header dark="false" mode="small">
+        <Appbar.Content title="Contacts" />
+        <Appbar.Action
+          icon={
+            showFav
+              ? require('../assets/icons/favorite.png')
+              : require('../assets/icons/star.png')
+          }
+          onPress={() => onFavToggle()}
+        />
+      </Appbar.Header>
+      <View style={styles.container}>
+        {showFav ? (
+          <FlatList
+            data={favList}
+            renderItem={renderContactListItem}
+            ListEmptyComponent={renderNoDataFound}
+            keyExtractor={item => item.id}
+          />
+        ) : (
+          <FlatList
+            data={sortedContacts}
+            renderItem={renderContactListItem}
+            ListEmptyComponent={renderNoDataFound}
+            keyExtractor={item => item.id}
+          />
+        )}
+        <FAB
+          icon={require('../assets/icons/add-user.png')}
+          style={styles.newContactFab}
+          onPress={() => navigation.navigate('NewContact')}
+        />
+      </View>
+    </>
   );
 };
 

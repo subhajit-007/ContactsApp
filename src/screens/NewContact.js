@@ -1,39 +1,103 @@
 import React, {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {ADD_CONTACT} from '../store/contactsSlice';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {Button, TextInput} from 'react-native-paper';
 
 const NewContact = ({navigation}) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [photo, setPhoto] = useState(null);
   const dispatch = useDispatch();
 
   const handleAddContact = () => {
     if (name && number) {
-      const newBudget = {id: uuidv4(), name, number: parseInt(number)};
+      const newBudget = {id: uuidv4(), name, number: parseInt(number), photo};
       dispatch(ADD_CONTACT(newBudget));
       navigation.goBack();
     }
   };
 
+  const handleSelectPhoto = () => {
+    launchImageLibrary({}, response => {
+      if (response.assets && response.assets.length > 0) {
+        setPhoto(response.assets[0].uri);
+        console.log('response.assets[0].uri ===> ', response.assets[0].uri);
+      }
+    });
+  };
+
+  const handleTakePhoto = () => {
+    launchCamera({}, response => {
+      if (response.assets && response.assets.length > 0) {
+        setPhoto(response.assets[0].uri);
+        console.log('response.assets[0].uri ===> ', response.assets[0].uri);
+      }
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Contact Name:</Text>
+      <View style={styles.photoContainer}>
+        {photo ? (
+          <Image source={{uri: photo}} style={styles.photo} />
+        ) : (
+          <Image
+            source={require('../assets/icons/user.png')}
+            style={styles.photo}
+          />
+        )}
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Button
+            icon={require('../assets/icons/camera.png')}
+            mode="contained"
+            onPress={handleTakePhoto}
+            style={{marginRight: 5}}>
+            Take Photo
+          </Button>
+          <Button
+            icon={require('../assets/icons/folder.png')}
+            mode="contained"
+            style={{marginLeft: 5}}
+            onPress={handleSelectPhoto}>
+            Select Photo
+          </Button>
+        </View>
+      </View>
+
       <TextInput
-        style={styles.input}
+        mode="outlined"
+        label="Contact Name"
+        placeholder="Enter contact name"
         value={name}
+        style={[styles.input, {backgroundColor: 'white'}]}
         onChangeText={value => setName(value)}
       />
-      <Text style={styles.label}>Number:</Text>
+
       <TextInput
-        style={styles.input}
+        mode="outlined"
+        label="Mobile Number"
+        placeholder="Enter mobile number"
         value={number}
-        onChangeText={value => setNumber(value)}
+        style={[styles.input, {backgroundColor: 'white'}]}
+        onChangeText={setNumber}
         keyboardType="numeric"
       />
-      <Button title="Save" onPress={handleAddContact} />
+      <Button
+        mode="contained"
+        onPress={handleAddContact}
+        style={{marginVertical: 10}}>
+        Save
+      </Button>
     </View>
   );
 };
@@ -50,11 +114,19 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginBottom: 16,
-    borderRadius: 4,
     color: 'black',
+    marginVertical: 10,
+  },
+  photoContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  photo: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

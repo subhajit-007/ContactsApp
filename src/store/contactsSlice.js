@@ -22,10 +22,10 @@ const contactsSlice = createSlice({
       AsyncStorage.setItem('contacts', JSON.stringify(state.contactList));
     },
     UPDATE_CONTACT: (state, action) => {
-      const { id, name, number } = action.payload;
+      const { id, name, number, photo } = action.payload;
       const index = state.contactList.findIndex(contact => contact?.id === id);
       if (index !== -1) {
-        state.contactList[index] = { ...state.contactList[index], name, number };
+        state.contactList[index] = { ...state.contactList[index], name, number, photo };
         AsyncStorage.setItem('contacts', JSON.stringify(state.contactList));
       }
     },

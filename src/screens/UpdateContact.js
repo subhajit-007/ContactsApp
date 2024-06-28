@@ -110,7 +110,7 @@ const UpdateContact = ({route, navigation}) => {
             label="Contact Name"
             placeholder="Enter contact name"
             value={name}
-            style={[styles.input, {backgroundColor: 'white'}]}
+            style={[styles.input]}
             onChangeText={value => setName(value)}
           />
 
@@ -119,7 +119,7 @@ const UpdateContact = ({route, navigation}) => {
             label="Mobile Number"
             placeholder="Enter mobile number"
             value={number}
-            style={[styles.input, {backgroundColor: 'white'}]}
+            style={[styles.input]}
             onChangeText={setNumber}
             keyboardType="numeric"
           />
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#1a1919"
   },
   label: {
     fontSize: 16,

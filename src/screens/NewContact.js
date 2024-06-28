@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
@@ -41,68 +41,76 @@ const NewContact = ({navigation}) => {
   return (
     <>
       <Appbar.Header dark="false" mode="small">
-        <Appbar.Action icon={require('../assets/icons/previous.png')} size={30} onPress={() => {navigation.goBack()}} />
+        <Appbar.Action
+          icon={require('../assets/icons/previous.png')}
+          size={30}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
         <Appbar.Content title="New Contact" />
       </Appbar.Header>
-      <View style={styles.container}>
-        <View style={styles.photoContainer}>
-          {photo ? (
-            <Image source={{uri: photo}} style={styles.photo} />
-          ) : (
-            <Image
-              source={require('../assets/icons/user.png')}
-              style={styles.photo}
-            />
-          )}
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.photoContainer}>
+            {photo ? (
+              <Image source={{uri: photo}} style={styles.photo} />
+            ) : (
+              <Image
+                source={require('../assets/icons/user.png')}
+                style={styles.photo}
+              />
+            )}
 
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Button
-              icon={require('../assets/icons/camera.png')}
-              mode="contained"
-              onPress={handleTakePhoto}
-              style={{marginRight: 5}}>
-              Take Photo
-            </Button>
-            <Button
-              icon={require('../assets/icons/folder.png')}
-              mode="contained"
-              style={{marginLeft: 5}}
-              onPress={handleSelectPhoto}>
-              Select Photo
-            </Button>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Button
+                icon={require('../assets/icons/camera.png')}
+                mode="contained"
+                onPress={handleTakePhoto}
+                style={{marginRight: 5}}>
+                Take Photo
+              </Button>
+              <Button
+                icon={require('../assets/icons/folder.png')}
+                mode="contained"
+                style={{marginLeft: 5}}
+                onPress={handleSelectPhoto}>
+                Select Photo
+              </Button>
+            </View>
           </View>
+
+          <TextInput
+            mode="outlined"
+            label="Contact Name"
+            placeholder="Enter contact name"
+            value={name}
+            style={[styles.input]}
+            onChangeText={value => setName(value)}
+          />
+
+          <TextInput
+            mode="outlined"
+            label="Mobile Number"
+            placeholder="Enter mobile number"
+            value={number}
+            style={[styles.input]}
+            onChangeText={setNumber}
+            keyboardType="numeric"
+          />
+          <Button
+            mode="contained"
+            onPress={handleAddContact}
+            style={{marginVertical: 10}}>
+            Save
+          </Button>
         </View>
-
-        <TextInput
-          mode="outlined"
-          label="Contact Name"
-          placeholder="Enter contact name"
-          value={name}
-          style={[styles.input, {backgroundColor: 'white'}]}
-          onChangeText={value => setName(value)}
-        />
-
-        <TextInput
-          mode="outlined"
-          label="Mobile Number"
-          placeholder="Enter mobile number"
-          value={number}
-          style={[styles.input, {backgroundColor: 'white'}]}
-          onChangeText={setNumber}
-          keyboardType="numeric"
-        />
-        <Button
-          mode="contained"
-          onPress={handleAddContact}
-          style={{marginVertical: 10}}>
-          Save
-        </Button>
-      </View>
+      </ScrollView>
     </>
   );
 };
@@ -112,6 +120,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#1a1919',
   },
   label: {
     fontSize: 16,

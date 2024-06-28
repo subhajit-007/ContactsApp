@@ -171,10 +171,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#1a1919',
   },
   contactText: {
     fontSize: 16,
-    color: 'black',
+    // color: 'black',
   },
   profilePhoto: {
     width: 50,
@@ -182,11 +183,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   deleteFab: {
-    marginRight: 2,
-    backgroundColor: 'red',
+    marginHorizontal: 4,
+    backgroundColor: '#a70d0d',
   },
   editFab: {
-    marginRight: 2,
+    marginHorizontal: 4,
   },
   noDataFab: {
     backgroundColor: '#edebebf8',
@@ -201,9 +202,9 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   listItemStyle: {
-    backgroundColor: '#f3f1f1',
+    // backgroundColor: '#f3f1f1',
     marginBottom: 2,
     borderBottomWidth: 1,
-    borderBottomColor: '#54358c',
+    borderBottomColor: '#4b4949c3',
   },
 });

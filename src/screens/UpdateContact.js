@@ -4,7 +4,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {UPDATE_CONTACT} from '../store/contactsSlice';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Button, TextInput, ToggleButton} from 'react-native-paper';
+import {Appbar, Button, TextInput, ToggleButton} from 'react-native-paper';
 
 const UpdateContact = ({route, navigation}) => {
   const {id} = route.params;
@@ -50,76 +50,88 @@ const UpdateContact = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.photoContainer}>
-          {photo ? (
-            <Image source={{uri: photo}} style={styles.photo} />
-          ) : (
-            <Image
-              source={require('../assets/icons/user.png')}
-              style={styles.photo}
-            />
-          )}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Button
-              icon={require('../assets/icons/camera.png')}
-              mode="contained"
-              onPress={handleTakePhoto}
-              style={{marginRight: 5}}>
-              Take Photo
-            </Button>
-            <Button
-              icon={require('../assets/icons/folder.png')}
-              mode="contained"
-              style={{marginHorizontal: 5}}
-              onPress={handleSelectPhoto}>
-              Select Photo
-            </Button>
-            <Button
-              icon={
-                fav
-                  ? require('../assets/icons/favorite.png')
-                  : require('../assets/icons/star.png')
-              }
-              mode={fav ? 'contained' : 'outlined'}
-              style={{marginLeft: 5}}
-              onPress={onFavToggle}>
-              Favorite
-            </Button>
+    <>
+      <Appbar.Header dark="false" mode="small">
+        <Appbar.Action
+          icon={require('../assets/icons/previous.png')}
+          size={30}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <Appbar.Content title="Edit Contact" />
+      </Appbar.Header>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.photoContainer}>
+            {photo ? (
+              <Image source={{uri: photo}} style={styles.photo} />
+            ) : (
+              <Image
+                source={require('../assets/icons/user.png')}
+                style={styles.photo}
+              />
+            )}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Button
+                icon={require('../assets/icons/camera.png')}
+                mode="contained"
+                onPress={handleTakePhoto}
+                style={{marginRight: 5}}>
+                Take Photo
+              </Button>
+              <Button
+                icon={require('../assets/icons/folder.png')}
+                mode="contained"
+                style={{marginHorizontal: 5}}
+                onPress={handleSelectPhoto}>
+                Select Photo
+              </Button>
+              <Button
+                icon={
+                  fav
+                    ? require('../assets/icons/favorite.png')
+                    : require('../assets/icons/star.png')
+                }
+                mode={fav ? 'contained' : 'outlined'}
+                style={{marginLeft: 5}}
+                onPress={onFavToggle}>
+                Favorite
+              </Button>
+            </View>
           </View>
-        </View>
-        <TextInput
-          mode="outlined"
-          label="Contact Name"
-          placeholder="Enter contact name"
-          value={name}
-          style={[styles.input, {backgroundColor: 'white'}]}
-          onChangeText={value => setName(value)}
-        />
+          <TextInput
+            mode="outlined"
+            label="Contact Name"
+            placeholder="Enter contact name"
+            value={name}
+            style={[styles.input, {backgroundColor: 'white'}]}
+            onChangeText={value => setName(value)}
+          />
 
-        <TextInput
-          mode="outlined"
-          label="Mobile Number"
-          placeholder="Enter mobile number"
-          value={number}
-          style={[styles.input, {backgroundColor: 'white'}]}
-          onChangeText={setNumber}
-          keyboardType="numeric"
-        />
-        <Button
-          mode="contained"
-          onPress={handleUpdateContact}
-          style={{marginVertical: 10}}>
-          Save Changes
-        </Button>
-      </View>
-    </ScrollView>
+          <TextInput
+            mode="outlined"
+            label="Mobile Number"
+            placeholder="Enter mobile number"
+            value={number}
+            style={[styles.input, {backgroundColor: 'white'}]}
+            onChangeText={setNumber}
+            keyboardType="numeric"
+          />
+          <Button
+            mode="contained"
+            onPress={handleUpdateContact}
+            style={{marginVertical: 10}}>
+            Save Changes
+          </Button>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

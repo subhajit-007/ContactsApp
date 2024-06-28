@@ -4,7 +4,13 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {UPDATE_CONTACT} from '../store/contactsSlice';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Appbar, Button, TextInput, ToggleButton} from 'react-native-paper';
+import {
+  Appbar,
+  Button,
+  Text,
+  TextInput,
+  ToggleButton,
+} from 'react-native-paper';
 
 const UpdateContact = ({route, navigation}) => {
   const {id} = route.params;
@@ -19,15 +25,6 @@ const UpdateContact = ({route, navigation}) => {
   );
   const [photo, setPhoto] = useState(contact ? contact.photo : null);
   const [fav, setFav] = useState(contact ? contact.fav : false);
-
-  const handleUpdateContact = () => {
-    if (name && number) {
-      dispatch(
-        UPDATE_CONTACT({id, name, number: parseInt(number), photo, fav}),
-      );
-      navigation.goBack();
-    }
-  };
 
   const handleSelectPhoto = () => {
     launchImageLibrary({}, response => {
@@ -47,6 +44,20 @@ const UpdateContact = ({route, navigation}) => {
 
   const onFavToggle = () => {
     setFav(!fav);
+  };
+
+  const isFormValid = () => {
+    console.log('valid ===> ', name.length > 2 && number.length == 10);
+    return name.length > 2 && number.length == 10;
+  };
+
+  const handleUpdateContact = () => {
+    if (isFormValid()) {
+      dispatch(
+        UPDATE_CONTACT({id, name, number: parseInt(number), photo, fav}),
+      );
+      navigation.goBack();
+    }
   };
 
   return (
@@ -113,6 +124,14 @@ const UpdateContact = ({route, navigation}) => {
             style={[styles.input]}
             onChangeText={value => setName(value)}
           />
+          {/* Error shows when input is not 0 or 3 char long */}
+          {name.length != 0 && name.length < 3 && (
+            <Text
+              variant="labelSmall"
+              style={{color: '#a70d0d', marginLeft: 5}}>
+              Name must be atlest 3 character long
+            </Text>
+          )}
 
           <TextInput
             mode="outlined"
@@ -123,8 +142,18 @@ const UpdateContact = ({route, navigation}) => {
             onChangeText={setNumber}
             keyboardType="numeric"
           />
+          {/* Error shows when input is 10 digit long */}
+          {!(number.length == 10) && (
+            <Text
+              variant="labelSmall"
+              style={{color: '#a70d0d', marginLeft: 5}}>
+              Mobile no. must be 10 digit long
+            </Text>
+          )}
+
           <Button
             mode="contained"
+            disabled={!isFormValid()}
             onPress={handleUpdateContact}
             style={{marginVertical: 10}}>
             Save Changes

@@ -5,25 +5,19 @@ import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {ADD_CONTACT} from '../store/contactsSlice';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {Appbar, Button, TextInput} from 'react-native-paper';
+import {Appbar, Button, Text, TextInput} from 'react-native-paper';
 
 const NewContact = ({navigation}) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [photo, setPhoto] = useState(null);
+  const [fav, setFav] = useState(false);
   const dispatch = useDispatch();
 
-  const handleAddContact = () => {
-    if (name && number) {
-      const newBudget = {id: uuidv4(), name, number: parseInt(number), photo};
-      dispatch(ADD_CONTACT(newBudget));
-      navigation.goBack();
-    }
-  };
-
   const isFormValid = () => {
-    return (name.length > 2 && number.length == 10) 
-  } 
+    console.log('valid ===> ', name.length > 2 && number.length == 10);
+    return name.length > 2 && number.length == 10;
+  };
 
   const handleSelectPhoto = () => {
     launchImageLibrary({}, response => {
@@ -40,6 +34,18 @@ const NewContact = ({navigation}) => {
         setPhoto(response.assets[0].uri);
       }
     });
+  };
+
+  const onFavToggle = () => {
+    setFav(!fav);
+  };
+
+  const handleAddContact = () => {
+    if (isFormValid()) {
+      const newBudget = {id: uuidv4(), name, number: parseInt(number), photo};
+      dispatch(ADD_CONTACT(newBudget));
+      navigation.goBack();
+    }
   };
 
   return (
@@ -86,6 +92,17 @@ const NewContact = ({navigation}) => {
                 onPress={handleSelectPhoto}>
                 Select Photo
               </Button>
+              <Button
+                icon={
+                  fav
+                    ? require('../assets/icons/favorite.png')
+                    : require('../assets/icons/star.png')
+                }
+                mode={fav ? 'contained' : 'outlined'}
+                style={{marginLeft: 5}}
+                onPress={onFavToggle}>
+                Favorite
+              </Button>
             </View>
           </View>
 
@@ -98,18 +115,37 @@ const NewContact = ({navigation}) => {
             onChangeText={value => setName(value)}
           />
 
+          {/* Error shows when input is not 0 or 3 char long */}
+          {name.length != 0 && name.length < 3 && (
+            <Text
+              variant="labelSmall"
+              style={{color: '#a70d0d', marginLeft: 5}}>
+              Name must be atlest 3 character long
+            </Text>
+          )}
+
           <TextInput
             mode="outlined"
             label="Mobile Number"
-            placeholder="Enter mobile number"
+            placeholder="10 digit mobile number"
             value={number}
             style={[styles.input]}
             onChangeText={setNumber}
             keyboardType="numeric"
           />
+
+          {/* Error shows when input is 10 digit long */}
+          {!(number.length == 10) && (
+            <Text
+              variant="labelSmall"
+              style={{color: '#a70d0d', marginLeft: 5}}>
+              Mobile no. must be 10 digit long
+            </Text>
+          )}
+
           <Button
             mode="contained"
-            disabled={isFormValid()}
+            disabled={!isFormValid()}
             onPress={handleAddContact}
             style={{marginVertical: 10}}>
             Save

@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {REMOVE_CONTACT, fetchContacts} from '../store/contactsSlice';
 import {Swipeable} from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
-import {List, FAB} from 'react-native-paper';
+import {List, FAB, Icon} from 'react-native-paper';
 
 const ContactsList = ({navigation}) => {
   const dispatch = useDispatch();
@@ -30,9 +30,19 @@ const ContactsList = ({navigation}) => {
 
   const renderNoDataFound = () => {
     return (
-      <View style={{flex: 1, justifyContent: "center", alignItems: "center", height: 100}}>
-        <Text style={{color: "#847f7f", fontSize: 20}}>No Contacts found !</Text>
-        <Text style={{color: "#847f7f", fontSize: 14}}>Please add new contacts</Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 100,
+        }}>
+        <Text style={{color: '#847f7f', fontSize: 20}}>
+          No Contacts found !
+        </Text>
+        <Text style={{color: '#847f7f', fontSize: 14}}>
+          Please add new contacts
+        </Text>
       </View>
     );
   };
@@ -60,7 +70,7 @@ const ContactsList = ({navigation}) => {
         <List.Item
           title={item?.name}
           titleStyle={styles.contactText}
-          style={{backgroundColor: '#f3f1f1', marginBottom: 2}}
+          style={styles.listItemStyle}
           description={item?.number}
           left={() => {
             return item.photo ? (
@@ -70,6 +80,18 @@ const ContactsList = ({navigation}) => {
                 source={require('../assets/icons/user.png')}
                 style={styles.profilePhoto}
               />
+            );
+          }}
+          right={props => {
+            return item.fav ? (
+              <List.Icon
+                {...props}
+                icon={require('../assets/icons/favorite.png')}
+                color={'#54358c'}
+                size={20}
+              />
+            ) : (
+              <></>
             );
           }}
         />
@@ -132,5 +154,11 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  listItemStyle: {
+    backgroundColor: '#f3f1f1',
+    marginBottom: 2,
+    borderBottomWidth: 1,
+    borderBottomColor: '#54358c',
   },
 });

@@ -4,7 +4,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {UPDATE_CONTACT} from '../store/contactsSlice';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Button, TextInput} from 'react-native-paper';
+import {Button, TextInput, ToggleButton} from 'react-native-paper';
 
 const UpdateContact = ({route, navigation}) => {
   const {id} = route.params;
@@ -18,10 +18,13 @@ const UpdateContact = ({route, navigation}) => {
     contact ? contact.number.toString() : '',
   );
   const [photo, setPhoto] = useState(contact ? contact.photo : null);
+  const [fav, setFav] = useState(contact ? contact.fav : false);
 
   const handleUpdateContact = () => {
     if (name && number) {
-      dispatch(UPDATE_CONTACT({id, name, number: parseInt(number), photo}));
+      dispatch(
+        UPDATE_CONTACT({id, name, number: parseInt(number), photo, fav}),
+      );
       navigation.goBack();
     }
   };
@@ -30,7 +33,6 @@ const UpdateContact = ({route, navigation}) => {
     launchImageLibrary({}, response => {
       if (response.assets && response.assets.length > 0) {
         setPhoto(response.assets[0].uri);
-        console.log('response.assets[0].uri ===> ', response.assets[0].uri);
       }
     });
   };
@@ -39,9 +41,12 @@ const UpdateContact = ({route, navigation}) => {
     launchCamera({}, response => {
       if (response.assets && response.assets.length > 0) {
         setPhoto(response.assets[0].uri);
-        console.log('response.assets[0].uri ===> ', response.assets[0].uri);
       }
     });
+  };
+
+  const onFavToggle = () => {
+    setFav(!fav);
   };
 
   return (
@@ -72,9 +77,20 @@ const UpdateContact = ({route, navigation}) => {
             <Button
               icon={require('../assets/icons/folder.png')}
               mode="contained"
-              style={{marginLeft: 5}}
+              style={{marginHorizontal: 5}}
               onPress={handleSelectPhoto}>
               Select Photo
+            </Button>
+            <Button
+              icon={
+                fav
+                  ? require('../assets/icons/favorite.png')
+                  : require('../assets/icons/star.png')
+              }
+              mode={fav ? 'contained' : 'outlined'}
+              style={{marginLeft: 5}}
+              onPress={onFavToggle}>
+              Favorite
             </Button>
           </View>
         </View>

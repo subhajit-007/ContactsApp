@@ -61,8 +61,8 @@ const UpdateContact = ({route, navigation}) => {
         />
         <Appbar.Content title="Edit Contact" />
       </Appbar.Header>
-      <ScrollView>
-        <View style={styles.container}>
+      <ScrollView style={styles.container}>
+        <View>
           <View style={styles.photoContainer}>
             {photo ? (
               <Image source={{uri: photo}} style={styles.photo} />
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#1a1919"
+    backgroundColor: '#1a1919',
   },
   label: {
     fontSize: 16,

@@ -21,6 +21,10 @@ const NewContact = ({navigation}) => {
     }
   };
 
+  const isFormValid = () => {
+    return (name.length > 2 && number.length == 10) 
+  } 
+
   const handleSelectPhoto = () => {
     launchImageLibrary({}, response => {
       if (response.assets && response.assets.length > 0) {
@@ -50,8 +54,8 @@ const NewContact = ({navigation}) => {
         />
         <Appbar.Content title="New Contact" />
       </Appbar.Header>
-      <ScrollView>
-        <View style={styles.container}>
+      <ScrollView style={styles.container}>
+        <View>
           <View style={styles.photoContainer}>
             {photo ? (
               <Image source={{uri: photo}} style={styles.photo} />
@@ -105,6 +109,7 @@ const NewContact = ({navigation}) => {
           />
           <Button
             mode="contained"
+            disabled={isFormValid()}
             onPress={handleAddContact}
             style={{marginVertical: 10}}>
             Save

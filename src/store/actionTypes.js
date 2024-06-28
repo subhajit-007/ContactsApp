@@ -1,0 +1,5 @@
+export const BudgetActionType = {
+  SET_CONTACTS: 'SET_CONTACTS',
+  ADD_CONTACTS: 'ADD_CONTACTS',
+  REMOVE_CONTACTS: 'REMOVE_CONTACTS',
+}
